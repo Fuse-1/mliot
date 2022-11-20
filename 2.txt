@@ -1,0 +1,72 @@
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+
+
+trainData = pd.read_csv("/home/student/Desktop/temperatures.csv")
+
+trainData.head(n=15)
+
+trainData.dtypes
+trainData.columns
+
+trainData.describe()
+
+trainData.isnull().sum()
+
+top_10_data = trainData.nlargest(10, "ANNUAL")
+plt.figure(figsize=(14,12))
+plt.title("Top 10 temperature records")
+
+sns.barplot(x=top_10_data.YEAR, y=top_10_data.ANNUAL)
+
+
+from sklearn import linear_model, metrics
+trainData.columnstrainData.columns
+X=trainData[["YEAR"]]
+Y=trainData[["JAN"]]
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=1)
+
+len(X_train)
+
+len(X_test)
+
+trainData.shape
+
+reg = linear_model.LinearRegression()
+print(X_train)
+
+model = reg.fit(X_train, Y_train)
+
+r_sq = reg.score(X_train, Y_train)
+
+print("determination coefficient:", r_sq)
+print("intercept:", model.intercept_)
+print('slope:', model.coef_)
+
+Y_pred = model.predict(X_test)
+
+print('predicted response:', Y_pred, sep='\n')
+
+plt.scatter(X_train, Y_train, color='black')
+plt.plot(X_train, reg.predict(X_train), color='blue', linewidth=3)
+plt.title("Temperature vs Year")
+plt.xlabel("Year")
+plt.ylabel("Temperature")
+plt.show()
+
+plt.scatter(X_test, Y_test, color='red')
+plt.plot(X_test, reg.predict(X_test), color='black', linewidth=3)
+plt.title("Temperature vs Year")
+plt.xlabel("Year")
+plt.ylabel("Temperature")
+plt.show()
+
+
+Output
+
+93
+24
+(117,18)
