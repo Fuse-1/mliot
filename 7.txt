@@ -1,0 +1,331 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+
+
+Data= pd.read_csv('E:/Datasets/Capstone/Data-Science-Capstone-Projects-master/Project 2/Healthcare - Diabetes/health care diabetes.csv')
+
+
+Data.info()
+
+
+Data.shape
+
+Data.head()
+
+
+Data.info()
+
+Data.isna().sum()
+
+Data.describe()
+
+
+for i in Data.columns:
+    a=np.count_nonzero(Data[i])
+    b=Data[i].count()
+    c=b-a
+    print(i,":",c)
+
+
+
+
+
+
+whole block until line ends
+---------------------------------------
+fig=plt.figure(figsize=(8,12))
+
+fig.add_subplot(4,2,1 ,  frameon=False)
+plt.hist(Data["Pregnancies"])
+plt.ylabel('Number of times pregnant')
+plt.title('Histogram of Pregnanies') 
+
+fig.add_subplot(4,2,2 ,  frameon=False)
+plt.hist(Data["Glucose"])
+plt.ylabel('Plasma glucose concentration')
+plt.title('Histogram of Glucose') 
+
+fig.add_subplot(4,2,3 ,  frameon=False)
+plt.hist(Data["BloodPressure"])
+plt.ylabel('Diastolic blood pressure (mm Hg)')
+plt.title('Histogram of Blood Pressure') 
+
+fig.add_subplot(4,2,4 ,  frameon=False)
+plt.hist(Data["SkinThickness"])
+plt.ylabel('Triceps skinfold thickness (mm)')
+plt.title('Histogram of Skin Thickness') 
+
+fig.add_subplot(4,2,5 ,  frameon=False)
+plt.hist(Data["Insulin"])
+plt.ylabel('Two hour serum insulin')
+plt.title('Histogram of Insulin') 
+
+fig.add_subplot(4,2,6 ,  frameon=False)
+plt.hist(Data["BMI"])
+plt.ylabel('Body Mass Index')
+plt.title('Histogram of BMI') 
+
+fig.add_subplot(4,2,7 ,  frameon=False)
+plt.hist(Data["DiabetesPedigreeFunction"])
+plt.ylabel('Diabetes pedigree function')
+plt.title('Histogram of Diabetes pedigree function') 
+
+fig.add_subplot(4,2,8 ,  frameon=False)
+plt.hist(Data["Age"])
+plt.ylabel('Age in years')
+plt.title('Histogram of Age') 
+
+fig.tight_layout(pad=3)
+plt.show()
+-----------------------------------------------
+
+Missing_var=["Glucose", "BloodPressure", "SkinThickness", "Insulin","BMI"]
+
+
+def replace():
+    for i in Missing_var:
+        med=Data[i].median()
+        Data[i].replace(0,med, inplace=True)
+        
+
+replace()
+
+
+for i in Data.columns:
+    a=np.count_nonzero(Data[i])
+    b=Data[i].count()
+    c=b-a
+    print(i,":",c)
+
+
+Data.to_csv('E:\Datasets\Capstone\Data-Science-Capstone-Projects-master\Project 2/processed.csv')
+
+
+
+
+
+
+
+whole block until line ends
+-------------------------------
+fig=plt.figure(figsize=(8,12))
+
+plt.subplot(4,2,1)
+sns.countplot(Data['Pregnancies'])
+
+
+plt.subplot(4,2,2)
+sns.countplot(Data['Glucose'])
+
+
+plt.subplot(4,2,3)
+sns.countplot(Data['BloodPressure'])
+
+
+plt.subplot(4,2,4)
+sns.countplot(Data['SkinThickness'])
+
+
+plt.subplot(4,2,5)
+sns.countplot(Data['Insulin'])
+
+
+plt.subplot(4,2,6)
+sns.countplot(Data['BMI'])
+
+
+plt.subplot(4,2,7)
+sns.countplot(Data['Outcome'])
+
+plt.show()
+
+---------------------------------------
+
+
+
+for i in Data.columns:
+    a=Data[i].nunique()
+    print(i, ":", a)
+
+
+sns.countplot(Data['Pregnancies'])
+
+
+
+for i in Data.columns:
+    print(i)
+    print("Maximum ", max(Data[i]))
+    print("99 percentile",np.percentile(Data[i],99))
+
+
+
+sns.pairplot(Data[['Pregnancies',"Glucose", "BloodPressure", "SkinThickness", "Insulin","BMI",
+                   "DiabetesPedigreeFunction","Age"]])
+
+
+corr=Data.corr()
+sns.heatmap(corr, annot=True, linewidths=0.5)
+plt.show()
+
+
+Y_Data=Data['Outcome']
+X_Data=Data.drop('Outcome', axis=1)
+
+
+from sklearn.model_selection import train_test_split
+
+
+X_train, X_test, y_train, y_test = train_test_split(X_Data, Y_Data, test_size=0.33, random_state=42)
+
+
+
+print(X_train.shape)
+print(X_test.shape)
+print(y_train.shape)
+print(y_test.shape)
+
+
+
+import warnings
+warnings.simplefilter("ignore")
+
+
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier,AdaBoostClassifier
+from xgboost import XGBClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.model_selection import GridSearchCV
+
+
+
+LR=LogisticRegression(max_iter=10, random_state=0)
+model_LR=LR.fit(X_train,y_train)
+Prediction_1=model_LR.predict(X_test)
+LR_Score=accuracy_score(y_test,Prediction_1)
+LR_Score
+
+
+
+DT=DecisionTreeClassifier(random_state=0)
+model_DT=DT.fit(X_train,y_train)
+Prediction_2=model_DT.predict(X_test)
+DT_Score=accuracy_score(y_test,Prediction_2)
+DT_Score
+
+
+
+
+
+RF=RandomForestClassifier(random_state=0)
+model_RF=RF.fit(X_train,y_train)
+Prediction_3=model_RF.predict(X_test)
+RF_Score=accuracy_score(y_test,Prediction_3)
+RF_Score
+
+
+
+
+SV=SVC(random_state=0)
+model_SV=SV.fit(X_train,y_train)
+Prediction_4=model_SV.predict(X_test)
+SVC_Score=accuracy_score(y_test,Prediction_4)
+SVC_Score
+
+
+
+
+KNN=KNeighborsClassifier()
+model_KNN=KNN.fit(X_train,y_train)
+Prediction_5=model_KNN.predict(X_test)
+KNN_Score=accuracy_score(y_test,Prediction_5)
+KNN_Score
+
+
+XG=XGBClassifier()
+model_XG=XG.fit(X_train,y_train)
+Prediction_6=model_XG.predict(X_test)
+XG_Score=accuracy_score(y_test,Prediction_6)
+XG_Score
+
+
+
+
+Model_Accuracy=pd.DataFrame({"Model":["Logistic Regression","Decision Tree Classifier", "Random Forest Classifier", "SVC", "KNN", "Xgboost"], 
+                "Accuracy_Score" : [LR_Score, DT_Score, RF_Score, SVC_Score, KNN_Score, XG_Score]})
+
+
+Model_Accuracy
+
+
+whole code until line ends
+---------------------------
+# Defining RFC : Random Forest Classifier model hyper-parameters
+RF_Model=RandomForestClassifier()
+RF_Param={'n_estimators':[50,100,150,200],
+         'max_depth':[10,20,30,50],
+         'min_samples_leaf':[2,4,6,8],
+         'min_samples_split':[2,4,6,8]}
+
+# Defining LR : Logistic Regression model hyper-parameters
+LR_model=LogisticRegression()
+LR_Param={'C':[0.1,0.01],
+         'tol':[0.01,0.001],
+         'max_iter':[50,100,150,200]}
+
+#Defining KNN : K nearest neigbors model hyper-parameter
+KNN_model=KNeighborsClassifier()
+KNN_Param={'n_neighbors':[5,8,10,15],
+          'p':[1,2],
+          'leaf_size':[10,20,30]}
+
+
+
+#Defining DT : Descision Tree model hyper-parameter
+DT_model=DecisionTreeClassifier()
+DT_Param={ 'max_depth':[10,20,30,50],
+         'min_samples_leaf':[2,4,6,8],
+         'min_samples_split':[2,4,6,8]}
+
+#Defining XGB : Xgboost model hyper-parameter
+XG_model=XGBClassifier()
+XG_Param={'max_depth':[4,6,8,10]}
+
+grid=zip([RF_Model,LR_model,KNN_model,DT_model,XG_model],[RF_Param,LR_Param,KNN_Param,DT_Param,XG_Param])
+
+best_clf=None
+#Perform grid search and select the model with best cv set scores
+for model_pipeline,param in grid:
+    temp=GridSearchCV(model_pipeline, param_grid=param,cv=3,n_jobs=1)
+    temp.fit(X_train,y_train)
+    if best_clf is None:
+        best_clf=temp
+    else:
+        if temp.best_score_ > best_clf.best_score_:
+            best_clf=temp
+print ("Best CV Score :",best_clf.best_score_)
+print ("Best Estimator :",best_clf.best_estimator_)
+print ("Model Parameters :",best_clf.best_params_)
+
+-------------------------------------------------------------------------
+
+
+
+
+from sklearn.metrics import classification_report, roc_auc_score
+predict=best_clf.best_estimator_.predict(X_test)
+print("ROC Score : {:.2%}".format(roc_auc_score(y_test,predict)))
+print("Classification Report :")
+print(classification_report(y_test,predict))
+
+
+
+
+
+Conclusion == ***Conclusion : From above analysis we conlude that Random Forest is best model with RoC score of 71.89% and model score of 79%***
