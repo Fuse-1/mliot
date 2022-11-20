@@ -22,7 +22,7 @@ sns.barplot(x=top_10_data.YEAR, y=top_10_data.ANNUAL)
 
 
 from sklearn import linear_model, metrics
-trainData.columnstrainData.columns
+trainData.columns
 X=trainData[["YEAR"]]
 Y=trainData[["JAN"]]
 

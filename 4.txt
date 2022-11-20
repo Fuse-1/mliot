@@ -26,8 +26,8 @@ data = data.drop(['Unnamed: 2','Unnamed: 3','Unnamed: 4'],axis=1)
 data = data.rename(columns = {'v1':'label','v2':'message'})
 data.describe()
 data.groupby('label').describe()
-#Calculating the lenght of all the messages
-data['lenght']=data['message'].apply(len)
+#Calculating the length of all the messages
+data['length']=data['message'].apply(len)
 data.head()
 
 
@@ -35,8 +35,8 @@ data.describe()
 
 
 %matplotlib inline
-#Plotting the lenght of ham and spam messages
-data.hist(by='label',column='lenght',bins=30,figsize=[15,5])
+#Plotting the length of ham and spam messages
+data.hist(by='label',column='length',bins=30,figsize=[15,5])
 
 #Converting our labels to numeric labels
 # ham = 0 and spam = 1
